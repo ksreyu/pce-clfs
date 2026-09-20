@@ -7,6 +7,6 @@
   },
   "scripts": {
     "build": "cd frontend && npm install && npx vite build && cd ../backend && npm install && npx prisma generate",
-    "start": "cd backend && npx prisma db push --force-reset --accept-data-loss && npx tsx prisma/seed.ts && npx tsx src/index.ts"
+    "start": "cd backend && DATABASE_URL=\"file:./prod.db\" npx prisma db push --force-reset --accept-data-loss && npx tsx prisma/seed.ts && npx tsx src/index.ts"
   }
 }

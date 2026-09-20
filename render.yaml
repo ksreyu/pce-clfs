@@ -9,7 +9,7 @@ services:
       - key: DATABASE_URL
         value: "file:./prod.db"
       - key: JWT_SECRET
-        generateValue: true
+        value: "pce-clfs-production-secret-2026"
       - key: JWT_EXPIRES_IN
         value: "7d"
       - key: PORT
