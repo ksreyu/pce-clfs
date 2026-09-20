@@ -1,0 +1,20 @@
+{
+  "name": "pce-clfs",
+  "version": "1.0.0",
+  "description": "Pillai College of Engineering - Lost & Found System",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npx tsx src/index.ts",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npx tsx src/index.ts",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "db:push": "cd backend && npx prisma db push --force-reset",
+    "db:seed": "cd backend && npx tsx prisma/seed.ts",
+    "db:reset": "npm run db:push && npm run db:seed",
+    "setup": "npm run install:all && npm run db:reset"
+  },
+  "keywords": ["lost-and-found", "college", "pillai-college"],
+  "author": "PCE Students",
+  "license": "MIT"
+}

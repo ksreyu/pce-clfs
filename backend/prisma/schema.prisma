@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  name        String
+  email       String    @unique
+  studentId   String    @unique
+  phone       String?
+  department  String?
+  year        String?
+  passwordHash String
+  role        String    @default("USER")
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items          Item[]          @relation("ReportedBy")
+  claims          Claim[]         @relation("ClaimantClaims")
+  reviewedClaims  Claim[]         @relation("ReviewedClaims")
+  notifications   Notification[]
+  activityLogs    ActivityLog[]
+}
+
+model Item {
+  id                String     @id @default(uuid())
+  itemCode          String     @unique
+  type              String
+  name              String
+  category          String
+  description       String
+  date              DateTime
+  time              String?
+  location          String
+  color             String?
+  brand             String?
+  model             String?
+  identifyingFeatures String?
+  imageUrl          String?
+  status            String     @default("LOST")
+  reportedById      String
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  reportedBy        User       @relation("ReportedBy", fields: [reportedById], references: [id])
+  lostMatches       Match[]    @relation("LostMatches")
+  foundMatches      Match[]    @relation("FoundMatches")
+  claims            Claim[]
+}
+
+model Match {
+  id          String      @id @default(uuid())
+  lostItemId  String
+  foundItemId String
+  score       Float
+  reason      String
+  status      String      @default("PENDING")
+  createdAt   DateTime    @default(now())
+
+  lostItem    Item   @relation("LostMatches", fields: [lostItemId], references: [id])
+  foundItem   Item   @relation("FoundMatches", fields: [foundItemId], references: [id])
+}
+
+model Claim {
+  id                String      @id @default(uuid())
+  itemId            String
+  claimantId        String
+  explanation       String
+  lostDate          DateTime?
+  lostLocation      String?
+  identifyingDetails String
+  proofUrl          String?
+  status            String      @default("PENDING")
+  reviewedById      String?
+  reviewComment     String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  item              Item        @relation(fields: [itemId], references: [id])
+  claimant          User        @relation("ClaimantClaims", fields: [claimantId], references: [id])
+  reviewedBy        User?       @relation("ReviewedClaims", fields: [reviewedById], references: [id])
+}
+
+model Notification {
+  id            String           @id @default(uuid())
+  userId        String
+  title         String
+  message       String
+  type          String
+  relatedItemId String?
+  isRead        Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+
+  user          User             @relation(fields: [userId], references: [id])
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  userId     String
+  action     String
+  entityType String
+  entityId   String?
+  details    String?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+}
