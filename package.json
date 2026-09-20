@@ -1,6 +1,7 @@
 {
   "name": "pce-clfs",
   "version": "1.0.0",
+  "packageManager": "npm@10.0.0",
   "description": "Pillai College of Engineering - Lost & Found System",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
